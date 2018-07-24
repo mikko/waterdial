@@ -2,8 +2,8 @@ import cv2
 import math
 import numpy as np
 
-_RED_LOW = ((0, 30, 10), (15, 255,255))
-_RED_HIGH = ((165, 30, 10), (179, 255,255))
+_RED_LOW = ((0, 90, 10), (10, 255,200))
+_RED_HIGH = ((170, 90, 10), (179, 255,200))
 _DIAL_COUNT = 4
 _DIAL_SCALE_ANGLE = 360 / 10
 
@@ -18,8 +18,8 @@ def _get_extremes(contour):
 
 def _mask(image):
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    mask_low = cv2.inRange(hsv_image, (0, 30, 10), (15, 255,255))
-    mask_high = cv2.inRange(hsv_image, (165, 30, 10), (179, 255,255))
+    mask_low = cv2.inRange(hsv_image, _RED_LOW[0], _RED_LOW[1])
+    mask_high = cv2.inRange(hsv_image, _RED_HIGH[0], _RED_HIGH[1])
     mask_full = mask_low + mask_high > 0
     masked = np.zeros_like(image, np.uint8)
     masked[mask_full] = image[mask_full]
@@ -78,11 +78,13 @@ def _get_dials(image, verbose):
     values = list(map(lambda c: _contour_to_value(c), contours))
     if verbose:
         print(values)
+    v_0, v_1, v_2, v_3 = values
+    result_litres = v_0 * 100 + v_1 * 10 + v_2 + v_3*0.1
+    return result_litres
     
 # Public meter reading without verbose output
 def get_litres(image):
-    handle_image(image, False)
-    return 1.1
+    return _get_dials(image, False)
 
 if __name__ == "__main__":
     import argparse
