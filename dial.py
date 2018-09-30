@@ -2,8 +2,8 @@ import cv2
 import math
 import numpy as np
 
-_RED_LOW = ((0, 90, 10), (10, 255,200))
-_RED_HIGH = ((170, 90, 10), (179, 255,200))
+_RED_LOW = ((0, 90, 10), (19, 255,255))
+_RED_HIGH = ((170, 30, 10), (179, 255,255))
 _DIAL_COUNT = 4
 _DIAL_SCALE_ANGLE = 360 / 10
 
